@@ -45,8 +45,14 @@ graph TD
     SPEC["SPEC v1<br/>docs/superpowers/specs/<br/>2026-06-12-debt-freedom-planner-design.md"]
 
     SPEC --> BUILD["BUILD: engine.js + 11 passing tests,<br/>UI, live at<br/>jtewright.github.io/debt-freedom-planner"]
-    BUILD --> S4["S4 · Usability journey test<br/>conversion_flow on live URL<br/>sim e974d13d · 2026-06-12"]
-    S4 -.->|comprehension fixes| BUILD
+    BUILD --> S4["S4 · Usability journey test<br/>conversion_flow on live URL · 5 sessions<br/>sim e974d13d · 2026-06-12"]
+    S4 -->|"100% completion in &lt;2 min;<br/>1 user: non-standard label"| D13["D13: Rename strategies to<br/>'Highest interest first (avalanche)' /<br/>'Smallest balance first (snowball)'"]
+    S4 -->|"example button hard to find"| D14[D14: Prominent example button<br/>above the form]
+    S4 -->|"finding real APRs = effort"| D15[D15: 'or in your banking app'<br/>APR guidance]
+    D13 --> BUILD2["BUILD v1.1 (shipped)"]
+    D14 --> BUILD2
+    D15 --> BUILD2
+    BUILD2 --> LAUNCH
 ```
 
 ## Decision register
@@ -64,9 +70,20 @@ graph TD
 | D9 | H1 = "Stop guessing…" | S3: 46.7% forced-choice (2x runner-up), 46.9% definite click | index.html hero |
 | D10 | No speed claims ("60 seconds" etc.) | S3: 62.7% find claim unbelievable; speed = 0.1% importance | All copy |
 | D11 | Privacy/trust strip calm + explained, not headline | S3: reassures 79% but makes 20.5% suspicious | index.html trust strip + "Why free?" |
-| D12 | Distribute via trusted communities (MSE-adjacent, Reddit), not ads | S3: 52.4% decide on source trust; MSE first stop for 50.4% | Launch plan |
+| D12 | Distribute via trusted communities (MSE-adjacent, Reddit), not ads | S3: 52.4% decide on source trust; MSE first stop for 50.4% | LAUNCH.md |
+| D13 | Standard strategy names: "Highest interest first (avalanche)" / "Smallest balance first (snowball)" | S4: non-standard "Cheapest first" label flagged; all users preferred avalanche after understanding it | v1.1 UI |
+| D14 | Prominent example button above the form | S4: discoverability confusion on example data | v1.1 UI |
+| D15 | APR guidance "on your statement or in your banking app" | S4: finding real APRs cited as adoption friction | v1.1 UI |
 
 ## Versioning notes
 
 - **SPEC v1** (2026-06-12): written after S1+S2; D9 placeholder pending S3.
-- Each future simulation gets a node (S5, S6…) and its decisions get register rows; superseded decisions will be struck through, not deleted, so the evolution stays visible.
+- **SPEC v1 finalised** (2026-06-12): D9–D11 merged in after S3; built and shipped as **v1.0** (live on GitHub Pages).
+- **v1.1** (2026-06-12): D13–D15 usability fixes from S4, shipped same day.
+- Each future simulation gets a node (S5, S6…) and its decisions get register rows; superseded decisions are struck through, not deleted, so the evolution stays visible.
+
+## Inheritance rules used
+
+1. Every simulation consumes prior decisions as fixed context (e.g. S2's concepts were all phrased to honour D1–D3; S3's headlines all complied with D7).
+2. Every decision cites the exact data point that produced it — no decision without a number.
+3. The same audience (UK Adults 2026 – Consumer Finance, n=804, 90% benchmarked accuracy) was used across S1–S4 so results are comparable between rounds.

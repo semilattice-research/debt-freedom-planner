@@ -80,4 +80,21 @@ Implements every validated decision: "Stop guessing" hero verbatim, no speed cla
 
 **What we did:** Ran a Semilattice **User Journey** study — simulated UK Consumer Finance users attempting the full flow on the live URL (land → enter debts → budget → get plan), watching for stalls around APR/minimum-payment inputs, budget comprehension, strategy-toggle understanding, and trust reactions.
 
-**Result:** _pending — simulation e974d13d running_
+**Result (5 simulated sessions on the live site):**
+- **100% task completion**, all in 97–114 seconds — everyone got their debt-free date, savings, monthly payments, and understood both strategies.
+- **Top trust-builders:** the privacy messaging ("your numbers never leave this device" — praised by all 5) and the overdraft warning that the £25 minimum barely covers £26.60 monthly interest (4 of 5 called it out; "it felt like the tool was actually looking out for me").
+- **All 5 said they would share or recommend the tool.**
+- Three minor issues: "Cheapest first" label is non-standard terminology; the example button was slightly hard to find; finding real APRs feels like effort.
+
+**Decisions / fixes shipped from this data:**
+1. Renamed strategies to "Highest interest first (avalanche)" and "Smallest balance first (snowball)".
+2. Example button made prominent ("Not sure where to start? See it with example numbers →") and moved above the form.
+3. Added "or in your banking app" guidance for finding APRs.
+
+---
+
+## 2026-06-12 — Launch plan
+
+**What we did:** Wrote the distribution plan (`LAUNCH.md`) directly from the data: trusted communities over ads (S3: 52.4% decide on source trust; MSE is the first stop for 50.4% of debt-help seekers; 84.3% share useful tools person-to-person). Drafted ready-to-post copy for Reddit (r/UKPersonalFinance via their rules-compliant route, r/DebtFreeUK and similar), the MoneySavingExpert Debt-Free Wannabe forum, Show HN, and Product Hunt. Success metric: 100+ unique visitors in GitHub Pages traffic stats with engagement evidence within 14 days of posting.
+
+**Note:** posting needs real community accounts, so the drafts are ready for Joseph to paste (or to review before I post anywhere we have access).
