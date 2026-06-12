@@ -44,7 +44,7 @@ graph TD
 
     SPEC["SPEC v1<br/>docs/superpowers/specs/<br/>2026-06-12-debt-freedom-planner-design.md"]
 
-    SPEC --> BUILD["BUILD: engine.js + 11 passing tests,<br/>UI, live at<br/>jtewright.github.io/debt-freedom-planner"]
+    SPEC --> BUILD["BUILD: engine.js + 11 passing tests,<br/>UI, live at<br/>semilattice-research.github.io/debt-freedom-planner"]
     BUILD --> S4["S4 · Usability journey test<br/>conversion_flow on live URL · 5 sessions<br/>sim e974d13d · 2026-06-12"]
     S4 -->|"100% completion in &lt;2 min;<br/>1 user: non-standard label"| D13["D13: Rename strategies to<br/>'Highest interest first (avalanche)' /<br/>'Smallest balance first (snowball)'"]
     S4 -->|"example button hard to find"| D14[D14: Prominent example button<br/>above the form]

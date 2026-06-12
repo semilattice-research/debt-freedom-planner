@@ -70,7 +70,7 @@
 
 **What we did:** Wrote the payoff calculation engine test-first (11 unit tests, all passing): monthly interest at APR/12, minimum payments + surplus to target debt (avalanche = highest APR, snowball = smallest balance), rollover when a debt clears, minimums-only baseline comparison, never-clears warnings, 50-year cap. Built the single-page site (vanilla HTML/CSS/JS, no build step, localStorage only), verified it end-to-end in a real browser (fixed one bug: the "Focus" tag marked the largest payment instead of the debt receiving extra money), and shipped it.
 
-**Live at: https://jtewright.github.io/debt-freedom-planner/** (GitHub Pages, repo `jtewright/debt-freedom-planner`).
+**Live at: https://semilattice-research.github.io/debt-freedom-planner/** (GitHub Pages, repo `semilattice-research/debt-freedom-planner`).
 
 Implements every validated decision: "Stop guessing" hero verbatim, no speed claims, calm trust strip + "Why is this free?", instant debt-free date headline with depth below, share buttons (Web Share/WhatsApp/copy) with "sharing sends only the link — never your numbers", not-advice disclaimer with StepChange/National Debtline/MoneyHelper links.
 

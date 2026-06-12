@@ -2,7 +2,7 @@
 
 **Goal:** 100+ users. **Channel strategy (from Semilattice S3):** 52.4% of UK adults decide whether to try a money tool based on trusting the source, and word-of-mouth dominates (84.3% would share a useful tool). So: launch where trust already exists, write like a helpful person not a marketer, and let the built-in share button compound.
 
-**Live URL:** https://jtewright.github.io/debt-freedom-planner/
+**Live URL:** https://semilattice-research.github.io/debt-freedom-planner/
 
 ## Channel order (highest trust-fit first)
 

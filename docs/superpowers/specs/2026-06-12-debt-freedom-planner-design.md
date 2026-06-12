@@ -37,7 +37,7 @@ Static site, no build step, no framework. Three files plus tests:
 - `js/app.js` — DOM wiring, localStorage, share, rendering
 - `test/engine.test.js`
 
-Deploy: GitHub repo (account `jtewright`) + GitHub Pages.
+Deploy: GitHub repo (org `semilattice-research`) + GitHub Pages.
 
 ## Calculation rules (engine)
 
