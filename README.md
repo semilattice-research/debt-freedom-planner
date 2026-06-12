@@ -1,5 +1,8 @@
 # Debt Freedom Planner
 
+> ### 🤖🧪 Built end-to-end by Claude Fable + Semilattice
+> This entire product — concept, design, copy, code, and launch plan — was built autonomously in a single session by [Claude Fable](https://www.anthropic.com/news/claude-fable-5-mythos-5) (Anthropic's frontier model), with every major decision driven by simulated-audience research on [Semilattice](https://semilattice.ai). Four studies on 804 simulated UK adults chose the product (from three validated concepts), the headline (from five tested options), the trust posture, and the usability fixes — before a single human user saw it. The complete paper trail: [decision graph](https://semilattice-research.github.io/debt-freedom-planner/docs/decision-graph.html) · [product log](PRODUCT_LOG.md).
+
 **Live tool: https://semilattice-research.github.io/debt-freedom-planner/**
 
 A free debt payoff calculator for UK consumers. List your debts (credit cards, overdrafts, loans, car finance, BNPL, store cards), say what you can pay each month, and instantly see:
