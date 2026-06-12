@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Built by Fable + Semilattice — the story of Debt Freedom Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,560;0,9..144,640;1,9..144,560&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f7f2e9; --card: #fffdf8; --ink: #1c2b24; --ink-soft: #4c5a52;
+    --green: #0d5c44; --green-deep: #0a4634; --copper: #b4541c; --copper-soft: #fdeadd;
+    --gold: #f8e8c8; --line: #ddd2bd;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; font-family: "Public Sans", sans-serif; background: var(--ink); }
+
+  .slide {
+    position: absolute; inset: 0; display: none; flex-direction: column; justify-content: center;
+    padding: 5vh 8vw; background: var(--paper); color: var(--ink);
+  }
+  .slide.active { display: flex; animation: arrive 0.45s cubic-bezier(0.2,0.8,0.3,1); }
+  @keyframes arrive { from { opacity: 0; transform: translateY(10px); } }
+  .slide.dark { background: var(--green-deep); color: var(--gold);
+    background-image: radial-gradient(ellipse at 25% -10%, rgba(244,232,208,0.13), transparent 55%); }
+
+  .eyebrow { font-size: clamp(0.7rem, 1.4vw, 0.85rem); font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--copper); margin: 0 0 1.2rem; }
+  .dark .eyebrow { color: #c9b98c; }
+  h1 { font-family: "Fraunces", serif; font-weight: 640; font-size: clamp(2rem, 5.2vw, 4rem); line-height: 1.06; letter-spacing: -0.015em; margin: 0 0 1.2rem; max-width: 22ch; }
+  h1 em { font-style: italic; color: var(--copper); }
+  .dark h1 em { color: #ffce8a; }
+  .sub { font-size: clamp(1rem, 1.9vw, 1.3rem); color: var(--ink-soft); max-width: 56ch; margin: 0; }
+  .dark .sub { color: #d8d2bd; }
+
+  .bignum { font-family: "Fraunces", serif; font-style: italic; font-weight: 560; font-size: clamp(4rem, 13vw, 9rem); line-height: 1; color: var(--copper); }
+  .dark .bignum { color: #ffce8a; }
+
+  /* bar charts */
+  .chart { margin: 2.2rem 0 0; max-width: 880px; }
+  .chart-title { font-size: clamp(0.85rem, 1.6vw, 1rem); font-weight: 700; margin-bottom: 1rem; }
+  .bar-row { display: grid; grid-template-columns: minmax(150px, 0.42fr) 1fr; gap: 0.8rem; align-items: center; margin: 0.5rem 0; font-size: clamp(0.8rem, 1.5vw, 0.95rem); }
+  .bar-row .lbl { text-align: right; color: var(--ink-soft); line-height: 1.2; }
+  .dark .bar-row .lbl { color: #d8d2bd; }
+  .bar-track { position: relative; height: clamp(1.5rem, 3.6vh, 2.1rem); }
+  .bar { height: 100%; border-radius: 4px; background: var(--line); display: flex; align-items: center; min-width: 2px;
+    animation: grow 0.8s 0.15s cubic-bezier(0.2,0.8,0.3,1) both; transform-origin: left; }
+  @keyframes grow { from { transform: scaleX(0); } }
+  .bar.win { background: var(--copper); }
+  .bar.green { background: var(--green); }
+  .dark .bar { background: rgba(243,239,228,0.25); }
+  .dark .bar.win { background: #ffce8a; }
+  .bar-val { position: absolute; left: calc(var(--w) + 0.6rem); top: 50%; transform: translateY(-50%); font-weight: 700; white-space: nowrap; }
+  .bar.win + .bar-val { color: var(--copper); }
+  .dark .bar.win + .bar-val { color: #ffce8a; }
+
+  .decision { margin-top: 2.4rem; background: var(--card); border: 1.5px solid var(--copper); border-radius: 10px;
+    padding: 1rem 1.4rem; font-size: clamp(0.9rem, 1.7vw, 1.1rem); max-width: 760px; }
+  .decision b { color: var(--copper); }
+  .dark .decision { background: rgba(255,253,248,0.08); border-color: rgba(255,206,138,0.6); color: var(--gold); }
+  .dark .decision b { color: #ffce8a; }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4vw; align-items: center; }
+  .shot { max-height: 74vh; max-width: 100%; border-radius: 10px; box-shadow: 0 14px 50px rgba(0,0,0,0.35); border: 1px solid var(--line); }
+
+  .stats3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5vw; margin-top: 2.5rem; max-width: 900px; }
+  .stat .n { font-family: "Fraunces", serif; font-style: italic; font-weight: 560; font-size: clamp(2.2rem, 5.5vw, 4rem); color: var(--copper); }
+  .dark .stat .n { color: #ffce8a; }
+  .stat .d { font-size: clamp(0.8rem, 1.5vw, 0.95rem); color: var(--ink-soft); margin-top: 0.3rem; }
+  .dark .stat .d { color: #d8d2bd; }
+
+  .foot-link { font-size: clamp(0.8rem, 1.5vw, 0.95rem); margin-top: 2rem; }
+  .foot-link a { color: var(--copper); font-weight: 700; }
+  .dark .foot-link a { color: #ffce8a; }
+
+  /* nav */
+  #nav { position: fixed; bottom: 1.2rem; left: 0; right: 0; display: flex; justify-content: center; gap: 0.45rem; z-index: 10; }
+  #nav button { width: 0.6rem; height: 0.6rem; border-radius: 50%; border: none; cursor: pointer; background: rgba(120,120,110,0.45); padding: 0; }
+  #nav button.on { background: var(--copper); }
+  #hintkeys { position: fixed; bottom: 1rem; right: 1.4rem; font-size: 0.72rem; color: rgba(120,120,110,0.8); z-index: 10; }
+  .pageno { position: fixed; bottom: 1rem; left: 1.4rem; font-size: 0.72rem; color: rgba(120,120,110,0.8); z-index: 10; }
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide dark">
+  <p class="eyebrow">Claude Fable × Semilattice · 12 June 2026</p>
+  <h1>An empty folder at 10:23.<br>A <em>shipped, validated product</em> by the afternoon.</h1>
+  <p class="sub">The story of Debt Freedom Planner — a free UK debt payoff calculator where every product, design, and marketing decision was made with simulated-audience data. Four studies · 804 simulated UK adults · 15 evidence-backed decisions.</p>
+</section>
+
+<!-- 2 · THE BRIEF -->
+<section class="slide">
+  <p class="eyebrow">The brief</p>
+  <h1>Ship a personal finance product for UK consumers. <em>Win 100 users.</em></h1>
+  <p class="sub">No concept given. No spec. One tool that changes everything: Semilattice — simulated UK audiences accurate enough (90% benchmarked) to do discovery, concept testing, copy testing, and usability research in minutes instead of weeks.</p>
+  <div class="stats3">
+    <div class="stat"><div class="n">4</div><div class="d">Semilattice studies, each feeding the next</div></div>
+    <div class="stat"><div class="n">804</div><div class="d">simulated UK adults (Consumer Finance audience)</div></div>
+    <div class="stat"><div class="n">~4 min</div><div class="d">per study, concept to data</div></div>
+  </div>
+</section>
+
+<!-- 3 · DISCOVERY: THE PAIN -->
+<section class="slide">
+  <p class="eyebrow">Study 1 · Discovery — "what hurts most?"</p>
+  <h1>Budgeting hurts <em>5× more</em> than anything else…</h1>
+  <div class="chart">
+    <div class="chart-title">"Which personal finance task frustrates you most?"</div>
+    <div class="bar-row"><span class="lbl">Budgeting &amp; tracking money</span><span class="bar-track"><span class="bar win" style="width:93%; --w:93%"></span><span class="bar-val" style="--w:93%">46.6%</span></span></div>
+    <div class="bar-row"><span class="lbl">Paying off debts efficiently</span><span class="bar-track"><span class="bar" style="width:20%; --w:20%"></span><span class="bar-val" style="--w:20%">10.0%</span></span></div>
+    <div class="bar-row"><span class="lbl">Tax</span><span class="bar-track"><span class="bar" style="width:13%; --w:13%"></span><span class="bar-val" style="--w:13%">6.6%</span></span></div>
+    <div class="bar-row"><span class="lbl">Savings goals</span><span class="bar-track"><span class="bar" style="width:7%; --w:7%"></span><span class="bar-val" style="--w:7%">3.3%</span></span></div>
+    <div class="bar-row"><span class="lbl">Pensions</span><span class="bar-track"><span class="bar" style="width:5%; --w:5%"></span><span class="bar-val" style="--w:5%">2.4%</span></span></div>
+  </div>
+</section>
+
+<!-- 4 · DISCOVERY: THE GAP -->
+<section class="slide">
+  <p class="eyebrow">Study 1 · Discovery — "why do current apps fail?"</p>
+  <h1>…and people don&rsquo;t want another dashboard. <em>They want to be told what to do.</em></h1>
+  <div class="chart">
+    <div class="chart-title">Biggest frustration with money apps people have tried</div>
+    <div class="bar-row"><span class="lbl">"No useful advice — just data"</span><span class="bar-track"><span class="bar win" style="width:79%; --w:79%"></span><span class="bar-val" style="--w:79%">39.7%</span></span></div>
+    <div class="bar-row"><span class="lbl">Require linking my bank</span><span class="bar-track"><span class="bar" style="width:32%; --w:32%"></span><span class="bar-val" style="--w:32%">15.8%</span></span></div>
+    <div class="bar-row"><span class="lbl">Too much manual data entry</span><span class="bar-track"><span class="bar" style="width:28%; --w:28%"></span><span class="bar-val" style="--w:28%">14.1%</span></span></div>
+    <div class="bar-row"><span class="lbl">Don't trust them with my info</span><span class="bar-track"><span class="bar" style="width:17%; --w:17%"></span><span class="bar-val" style="--w:17%">8.3%</span></span></div>
+  </div>
+  <div class="decision"><b>→ Decisions D1–D3:</b> give specific actions, never just charts · no bank connection (93.8% prefer it) · data never leaves the device (85.5% abandon over data sharing).</div>
+</section>
+
+<!-- 5 · CONCEPT HEAD-TO-HEAD -->
+<section class="slide">
+  <p class="eyebrow">Study 2 · Concept head-to-head</p>
+  <h1>Three concepts entered. <em>One dominated both metrics.</em></h1>
+  <div class="chart">
+    <div class="chart-title">"Which would you try first?" — and who would <i>definitely</i> recommend it after use</div>
+    <div class="bar-row"><span class="lbl">Debt Freedom Planner</span><span class="bar-track"><span class="bar win" style="width:92%; --w:92%"></span><span class="bar-val" style="--w:92%">45.8% try-first · 67.6% definite recommend</span></span></div>
+    <div class="bar-row"><span class="lbl">Money MOT (score /100)</span><span class="bar-track"><span class="bar" style="width:66%; --w:66%"></span><span class="bar-val" style="--w:66%">32.9% · 17.6%</span></span></div>
+    <div class="bar-row"><span class="lbl">Money Snapshot (budget)</span><span class="bar-track"><span class="bar" style="width:43%; --w:43%"></span><span class="bar-val" style="--w:43%">21.3% · 27.8%</span></span></div>
+  </div>
+  <div class="decision"><b>→ Decision D5:</b> build the Debt Freedom Planner. <b>D6:</b> 84.3% share useful tools with friends — one-tap sharing becomes a core feature, not a footer link.</div>
+</section>
+
+<!-- 6 · HEADLINE TEST -->
+<section class="slide">
+  <p class="eyebrow">Study 3 · Headline test (5 options)</p>
+  <h1>&ldquo;<em>Stop guessing.</em>&rdquo; beat every other headline — 2:1.</h1>
+  <div class="chart">
+    <div class="chart-title">Forced choice: "which would make you click?"</div>
+    <div class="bar-row"><span class="lbl">"Stop guessing. See exactly when…"</span><span class="bar-track"><span class="bar win" style="width:93%; --w:93%"></span><span class="bar-val" style="--w:93%">46.7%</span></span></div>
+    <div class="bar-row"><span class="lbl">"What's your debt-free date?"</span><span class="bar-track"><span class="bar" style="width:43%; --w:43%"></span><span class="bar-val" style="--w:43%">21.3%</span></span></div>
+    <div class="bar-row"><span class="lbl">"See your date in 60 seconds"</span><span class="bar-track"><span class="bar" style="width:26%; --w:26%"></span><span class="bar-val" style="--w:26%">13.0%</span></span></div>
+    <div class="bar-row"><span class="lbl">"The fastest way out of debt"</span><span class="bar-track"><span class="bar" style="width:21%; --w:21%"></span><span class="bar-val" style="--w:21%">10.5%</span></span></div>
+    <div class="bar-row"><span class="lbl">"Clear your debts months sooner"</span><span class="bar-track"><span class="bar" style="width:14%; --w:14%"></span><span class="bar-val" style="--w:14%">7.1%</span></span></div>
+  </div>
+  <div class="decision"><b>→ Bonus save:</b> 62.7% found the "60 seconds" claim unbelievable, and speed mattered to just 0.1%. Every speed claim was deleted before launch.</div>
+</section>
+
+<!-- 7 · THE BUILD -->
+<section class="slide dark">
+  <div class="cols">
+    <div>
+      <p class="eyebrow">The build — same afternoon</p>
+      <h1>Every validated decision, <em>shipped.</em></h1>
+      <p class="sub">Calculation engine written test-first (11 passing tests) · winning headline verbatim · calm trust strip with "Why is this free?" · instant debt-free date, depth below · one-tap share · StepChange / National Debtline / MoneyHelper signposting. Static page, no server, no tracking.</p>
+      <p class="foot-link"><a href="https://semilattice-research.github.io/debt-freedom-planner/">semilattice-research.github.io/debt-freedom-planner →</a></p>
+    </div>
+    <div><img class="shot" src="dfp-fullpage.jpeg" alt="Full page screenshot of Debt Freedom Planner"></div>
+  </div>
+</section>
+
+<!-- 8 · USABILITY -->
+<section class="slide">
+  <p class="eyebrow">Study 4 · Simulated usability test on the live URL</p>
+  <h1>5 of 5 completed the flow. <em>All five said they&rsquo;d share it.</em></h1>
+  <div class="stats3">
+    <div class="stat"><div class="n">100%</div><div class="d">task completion — debt-free date, savings, monthly payments, strategy choice</div></div>
+    <div class="stat"><div class="n">&lt;2 min</div><div class="d">every session (97–114 seconds)</div></div>
+    <div class="stat"><div class="n">3</div><div class="d">minor issues found → fixed and re-shipped the same day (v1.1)</div></div>
+  </div>
+  <p class="sub" style="margin-top:2.4rem">"The overdraft warning felt like the tool was actually looking out for me." — the never-clears interest warning was the standout trust moment, cited by 4 of 5 users.</p>
+</section>
+
+<!-- 9 · DECISION GRAPH -->
+<section class="slide">
+  <p class="eyebrow">The method, made visible</p>
+  <h1>Four studies. Fifteen decisions. <em>No decision without a number.</em></h1>
+  <p class="sub">Every decision cites the exact data point that produced it, every study inherits the decisions before it, and superseded choices are struck through — never deleted. The whole lineage is an interactive graph.</p>
+  <div class="stats3">
+    <div class="stat"><div class="n">S1→S4</div><div class="d">each study consumed the last one's decisions as fixed context</div></div>
+    <div class="stat"><div class="n">D1–D15</div><div class="d">decision register, each with its evidence pointer</div></div>
+    <div class="stat"><div class="n">v1.1</div><div class="d">two shipped builds, both downstream of the data</div></div>
+  </div>
+  <p class="foot-link"><a href="decision-graph.html">Explore the interactive decision graph →</a></p>
+</section>
+
+<!-- 10 · WHAT'S NEXT -->
+<section class="slide dark">
+  <p class="eyebrow">Next · the road to 100 users</p>
+  <h1>The data already wrote the <em>launch plan.</em></h1>
+  <p class="sub">52.4% decide whether to try a money tool based on trusting the source, and 84.3% pass useful tools to friends. So: no ads — launch posts drafted for the UK's trusted money communities (Reddit personal-finance subs, the MoneySavingExpert forum, Show HN), and the share loop is built into the results screen.</p>
+  <div class="stats3">
+    <div class="stat"><div class="n">52.4%</div><div class="d">decide on source trust → trusted communities, not ads</div></div>
+    <div class="stat"><div class="n">84.3%</div><div class="d">would send the link to a friend → sharing is the growth engine</div></div>
+    <div class="stat"><div class="n">100</div><div class="d">users = success, measured by GitHub Pages traffic (no tracking on-site, by design)</div></div>
+  </div>
+  <p class="foot-link"><a href="https://github.com/semilattice-research/debt-freedom-planner">github.com/semilattice-research/debt-freedom-planner →</a></p>
+</section>
+
+<div id="nav"></div>
+<div class="pageno" id="pageno"></div>
+<div id="hintkeys">← → or click to advance</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const nav = document.getElementById('nav');
+  let cur = 0;
+  slides.forEach((_, i) => {
+    const b = document.createElement('button');
+    b.setAttribute('aria-label', 'Slide ' + (i + 1));
+    b.addEventListener('click', (ev) => { ev.stopPropagation(); go(i); });
+    nav.appendChild(b);
+  });
+  function go(i) {
+    cur = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, j) => s.classList.toggle('active', j === cur));
+    [...nav.children].forEach((b, j) => b.classList.toggle('on', j === cur));
+    document.getElementById('pageno').textContent = (cur + 1) + ' / ' + slides.length;
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') go(cur + 1);
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(cur - 1);
+    if (e.key === 'Home') go(0);
+  });
+  document.addEventListener('click', (e) => { if (!e.target.closest('a, button')) go(cur + 1); });
+  let touchX = null;
+  document.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 40) go(cur + (dx < 0 ? 1 : -1));
+    touchX = null;
+  }, { passive: true });
+  go(0);
+</script>
+</body>
+</html>
