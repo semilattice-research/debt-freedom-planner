@@ -73,10 +73,10 @@
 
   /* growing mini decision graph */
   #minigraph {
-    position: fixed; bottom: 2.7rem; left: 50%; transform: translateX(-50%);
-    width: min(92vw, 880px); z-index: 10;
-    background: rgba(255, 253, 248, 0.93); border: 1px solid var(--line); border-radius: 999px;
-    padding: 0.35rem 1.1rem 0.15rem; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.14);
+    position: fixed; bottom: 3.4rem; left: 50%; transform: translateX(-50%);
+    width: min(96vw, 1180px); z-index: 10;
+    background: rgba(255, 253, 248, 0.95); border: 1px solid var(--line); border-radius: 18px;
+    padding: 0.55rem 1.3rem 0.25rem; box-shadow: 0 6px 26px rgba(0, 0, 0, 0.16);
   }
   #minigraph svg { display: block; width: 100%; height: auto; }
   #minigraph .nd, #minigraph .lb { opacity: 0.13; transition: opacity 0.45s ease; }
@@ -86,6 +86,8 @@
   #minigraph .nd.now { animation: nodepulse 1.3s ease-in-out infinite; }
   @keyframes nodepulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
   @media (max-width: 640px), (max-height: 560px) { #minigraph { display: none; } }
+  .slide { padding-bottom: 19vh; }
+  @media (max-width: 640px), (max-height: 560px) { .slide { padding-bottom: 5vh; } }
 
   /* nav */
   #nav { position: fixed; bottom: 1.2rem; left: 0; right: 0; display: flex; justify-content: center; gap: 0.45rem; z-index: 10; }
@@ -239,51 +241,83 @@
 </div>
 
 <script>
-  /* ---- growing mini decision graph ----
+  /* ---- growing mini decision graph (accurate edges, see DECISION_GRAPH.md) ----
      step = the slide (1-based) on which the node enters the story */
-  const MINI = [
-    { id: 'C0',  x: 28,  t: 'ctx', step: 2,  label: 'brief' },
-    { id: 'S1',  x: 108, t: 'sim', step: 3,  label: 'S1 discover' },
-    { id: 'G1',  x: 188, t: 'dec', step: 4,  n: 4, label: 'D1–4' },
-    { id: 'S2',  x: 268, t: 'sim', step: 5,  label: 'S2 concepts' },
-    { id: 'G2',  x: 348, t: 'dec', step: 5,  n: 4, label: 'D5–8' },
-    { id: 'S3',  x: 428, t: 'sim', step: 6,  label: 'S3 headline' },
-    { id: 'G3',  x: 508, t: 'dec', step: 6,  n: 4, label: 'D9–12' },
-    { id: 'SP',  x: 588, t: 'art', step: 7,  label: 'spec' },
-    { id: 'B1',  x: 662, t: 'art', step: 7,  label: 'v1.0 live' },
-    { id: 'S4',  x: 742, t: 'sim', step: 8,  label: 'S4 usability' },
-    { id: 'G4',  x: 822, t: 'dec', step: 8,  n: 3, label: 'D13–15' },
-    { id: 'B2',  x: 896, t: 'art', step: 9,  label: 'v1.1' },
-    { id: 'L',   x: 966, t: 'art', step: 10, label: 'launch' },
+  const CY = 40;
+  const Y4 = [16, 32, 48, 64], Y3 = [24, 40, 56];
+  const MN = {
+    C0:  { x: 26,  y: CY,    t: 'ctx', step: 2,  label: 'brief' },
+    S1:  { x: 106, y: CY,    t: 'sim', step: 3,  label: 'S1 discover' },
+    D1:  { x: 186, y: Y4[0], t: 'dec', step: 4 },
+    D2:  { x: 186, y: Y4[1], t: 'dec', step: 4 },
+    D3:  { x: 186, y: Y4[2], t: 'dec', step: 4, label: 'D1–4' },
+    D4:  { x: 186, y: Y4[3], t: 'dec', step: 4 },
+    S2:  { x: 266, y: CY,    t: 'sim', step: 5,  label: 'S2 concepts' },
+    D5:  { x: 346, y: Y4[0], t: 'dec', step: 5 },
+    D6:  { x: 346, y: Y4[1], t: 'dec', step: 5 },
+    D7:  { x: 346, y: Y4[2], t: 'dec', step: 5, label: 'D5–8' },
+    D8:  { x: 346, y: Y4[3], t: 'dec', step: 5 },
+    S3:  { x: 426, y: CY,    t: 'sim', step: 6,  label: 'S3 headline' },
+    D9:  { x: 506, y: Y4[0], t: 'dec', step: 6 },
+    D10: { x: 506, y: Y4[1], t: 'dec', step: 6 },
+    D11: { x: 506, y: Y4[2], t: 'dec', step: 6, label: 'D9–12' },
+    D12: { x: 506, y: Y4[3], t: 'dec', step: 6 },
+    SP:  { x: 588, y: CY,    t: 'art', step: 7,  label: 'spec' },
+    B1:  { x: 662, y: CY,    t: 'art', step: 7,  label: 'v1.0 live' },
+    S4:  { x: 742, y: CY,    t: 'sim', step: 8,  label: 'S4 usability' },
+    D13: { x: 822, y: Y3[0], t: 'dec', step: 8 },
+    D14: { x: 822, y: Y3[1], t: 'dec', step: 8, label: 'D13–15' },
+    D15: { x: 822, y: Y3[2], t: 'dec', step: 8 },
+    B2:  { x: 896, y: CY,    t: 'art', step: 9,  label: 'v1.1' },
+    L:   { x: 966, y: CY,    t: 'art', step: 10, label: 'launch' },
+  };
+  // True lineage: which decisions feed the next study vs flow straight to spec/launch
+  const ME = [
+    ['C0','S1'],
+    ['S1','D1'], ['S1','D2'], ['S1','D3'], ['S1','D4'],
+    ['D1','S2'], ['D4','S2'],            // only D1+D4 shaped the concept test
+    ['D2','SP'], ['D3','SP'],            // trust/input decisions went straight to the spec
+    ['S2','D5'], ['S2','D6'], ['S2','D7'], ['S2','D8'],
+    ['D7','S3'],                         // only copy guidance shaped the headline test
+    ['D5','SP'], ['D6','SP'], ['D8','SP'],
+    ['S3','D9'], ['S3','D10'], ['S3','D11'], ['S3','D12'],
+    ['D9','SP'], ['D10','SP'], ['D11','SP'],
+    ['D12','L'],                         // launch-channel decision skips the spec
+    ['SP','B1'], ['B1','S4'],
+    ['S4','D13'], ['S4','D14'], ['S4','D15'],
+    ['D13','B2'], ['D14','B2'], ['D15','B2'],
+    ['B2','L'],
   ];
-  const CY = 27;
-  const dotYs = (n) => n === 4 ? [9, 21, 33, 45] : [15, 27, 39];
   (function buildMini() {
     const fill = { sim: '#0d5c44', dec: '#b4541c', art: '#1c2b24' };
     let edges = '', nodes = '', labels = '';
-    MINI.forEach((m, i) => {
-      const prev = MINI[i - 1];
-      if (prev) {
-        const st = Math.max(m.step, prev.step);
-        const pys = prev.t === 'dec' ? dotYs(prev.n) : [CY];
-        const mys = m.t === 'dec' ? dotYs(m.n) : [CY];
-        pys.forEach(py => mys.forEach(my => {
-          edges += `<path class="ed" data-step="${st}" d="M ${prev.x + 8} ${py} C ${(prev.x + m.x) / 2} ${py}, ${(prev.x + m.x) / 2} ${my}, ${m.x - 8} ${my}"/>`;
-        }));
-      }
-      if (m.t === 'dec') {
-        dotYs(m.n).forEach(y => { nodes += `<circle class="nd" data-step="${m.step}" cx="${m.x}" cy="${y}" r="3.6" fill="${fill.dec}"/>`; });
-      } else if (m.t === 'sim') {
-        nodes += `<circle class="nd" data-step="${m.step}" cx="${m.x}" cy="${CY}" r="7.5" fill="${fill.sim}"/>`;
-      } else if (m.t === 'art') {
-        nodes += `<rect class="nd" data-step="${m.step}" x="${m.x - 6.5}" y="${CY - 6.5}" width="13" height="13" rx="3" fill="${fill.art}"/>`;
+    for (const [a, b] of ME) {
+      const A = MN[a], B = MN[b];
+      const st = Math.max(A.step, B.step);
+      const gap = B.x - A.x;
+      let d;
+      if (gap > 120) {
+        // long skip edge: arc through the clear corridor at the top
+        d = `M ${A.x + 9} ${A.y} C ${A.x + gap * 0.25} 4, ${B.x - gap * 0.25} 4, ${B.x - 9} ${B.y}`;
       } else {
-        nodes += `<circle class="nd" data-step="${m.step}" cx="${m.x}" cy="${CY}" r="6.5" fill="none" stroke="#4c5a52" stroke-width="1.3" stroke-dasharray="3 2.4"/>`;
+        d = `M ${A.x + 9} ${A.y} C ${(A.x + B.x) / 2} ${A.y}, ${(A.x + B.x) / 2} ${B.y}, ${B.x - 9} ${B.y}`;
       }
-      labels += `<text class="lb" data-step="${m.step}" x="${m.x}" y="62" text-anchor="middle" font-size="8.5" font-weight="600" fill="#4c5a52">${m.label}</text>`;
-    });
+      edges += `<path class="ed" data-step="${st}" d="${d}"/>`;
+    }
+    for (const [id, m] of Object.entries(MN)) {
+      if (m.t === 'dec') {
+        nodes += `<circle class="nd" data-step="${m.step}" cx="${m.x}" cy="${m.y}" r="4.4" fill="${fill.dec}"/>`;
+      } else if (m.t === 'sim') {
+        nodes += `<circle class="nd" data-step="${m.step}" cx="${m.x}" cy="${m.y}" r="9" fill="${fill.sim}"/>`;
+      } else if (m.t === 'art') {
+        nodes += `<rect class="nd" data-step="${m.step}" x="${m.x - 7.5}" y="${m.y - 7.5}" width="15" height="15" rx="3.5" fill="${fill.art}"/>`;
+      } else {
+        nodes += `<circle class="nd" data-step="${m.step}" cx="${m.x}" cy="${m.y}" r="8" fill="none" stroke="#4c5a52" stroke-width="1.4" stroke-dasharray="3.2 2.6"/>`;
+      }
+      if (m.label) labels += `<text class="lb" data-step="${m.step}" x="${m.x}" y="89" text-anchor="middle" font-size="10" font-weight="600" fill="#4c5a52">${m.label}</text>`;
+    }
     document.getElementById('minigraph').innerHTML =
-      `<svg viewBox="0 0 994 68" role="presentation">${edges}${nodes}${labels}</svg>`;
+      `<svg viewBox="0 0 994 94" role="presentation">${edges}${nodes}${labels}</svg>`;
   })();
   function updateMini(slide) {
     document.querySelectorAll('#minigraph [data-step]').forEach(el => {
