@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decision Inheritance Graph — Debt Freedom Planner</title>
+<link rel="stylesheet" href="https://unpkg.com/reactflow@11.11.4/dist/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f7f2e9; --card: #fffdf8; --ink: #1c2b24; --ink-soft: #4c5a52;
+    --green: #0d5c44; --green-deep: #0a4634; --copper: #b4541c; --line: #ddd2bd;
+  }
+  html, body { margin: 0; height: 100%; font-family: "Public Sans", sans-serif; background: var(--paper); color: var(--ink); }
+  #header { padding: 0.9rem 1.4rem; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; gap: 1.2rem; flex-wrap: wrap; }
+  #header h1 { font-family: "Fraunces", serif; font-weight: 560; font-size: 1.25rem; margin: 0; }
+  #header p { margin: 0; font-size: 0.82rem; color: var(--ink-soft); }
+  #legend { display: flex; gap: 1rem; margin-left: auto; font-size: 0.75rem; font-weight: 600; align-items: center; }
+  .key { display: inline-block; width: 0.85em; height: 0.85em; border-radius: 3px; margin-right: 0.35em; vertical-align: -0.1em; }
+  #root { height: calc(100% - 58px); }
+
+  .gnode { font-size: 11px; line-height: 1.35; border-radius: 8px; padding: 8px 11px; width: 218px; box-sizing: border-box; }
+  .gnode b { display: block; font-size: 11.5px; margin-bottom: 2px; }
+  .gnode small { opacity: 0.82; display: block; }
+  .n-sim  { background: var(--green); color: #f3efe4; border: 1.5px solid var(--green-deep); box-shadow: 0 2px 6px rgba(10,70,52,0.25); }
+  .n-dec  { background: var(--card); color: var(--ink); border: 1.5px solid var(--copper); }
+  .n-art  { background: var(--ink); color: #f8e8c8; border: 1.5px solid #000; }
+  .n-ctx  { background: transparent; color: var(--ink-soft); border: 1.5px dashed var(--ink-soft); }
+  .react-flow__edge-text { font-size: 10.5px; font-weight: 600; fill: var(--ink-soft); }
+  .react-flow__edge-textbg { fill: var(--paper); }
+  .react-flow__attribution { background: transparent; }
+</style>
+</head>
+<body>
+<div id="header">
+  <h1>Decision Inheritance Graph</h1>
+  <p>Debt Freedom Planner — every Semilattice simulation (n=804, UK Adults 2026 · Consumer Finance), the decision each data point produced, and where it flowed.</p>
+  <div id="legend">
+    <span><span class="key" style="background:#0d5c44"></span>Simulation</span>
+    <span><span class="key" style="background:#fffdf8;border:1.5px solid #b4541c"></span>Decision</span>
+    <span><span class="key" style="background:#1c2b24"></span>Artifact</span>
+    <span><span class="key" style="border:1.5px dashed #4c5a52"></span>Constraint</span>
+  </div>
+</div>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/reactflow@11.11.4/dist/umd/index.js"></script>
+<script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
+<script>
+(function () {
+  const e = React.createElement;
+  const RF = window.ReactFlow;
+  const Flow = RF.default, Background = RF.Background, Controls = RF.Controls,
+        MiniMap = RF.MiniMap, MarkerType = RF.MarkerType, Position = RF.Position;
+
+  // id, kind, title, sub
+  const N = [
+    ['C0','ctx','Constraints (up-front)','Free web app · no Open Banking · no signup · value in first session'],
+    ['S1','sim','S1 · Discovery survey','understand_users · sim 4d51bac5 · 12 Jun 2026'],
+    ['D1','dec','D1 · Advice, not dashboards','Specific personalised actions, never just charts'],
+    ['D2','dec','D2 · Manual input only','No bank connection, confirmed'],
+    ['D3','dec','D3 · Trust posture','Data stays on device · "why free?" on page · no FCA claims'],
+    ['D4','dec','D4 · Shortlist 3 concepts','Money Snapshot · Debt Freedom Planner · Money MOT'],
+    ['S2','sim','S2 · Concept head-to-head','prioritise_features · sim fad3e069 · 12 Jun 2026'],
+    ['D5','dec','D5 · BUILD Debt Freedom Planner','Snapshot & MOT killed for v1'],
+    ['D6','dec','D6 · One-tap sharing is core','On the results screen, not an afterthought'],
+    ['D7','dec','D7 · Clarity + plan language','No score gimmicks'],
+    ['D8','dec','D8 · Two-layer UX','Instant debt-free date · depth below'],
+    ['S3','sim','S3 · Headline test','test_messaging · sim 916fc331 · 12 Jun 2026'],
+    ['D9','dec','D9 · H1 chosen','"Stop guessing. See exactly when you’ll be debt-free…"'],
+    ['D10','dec','D10 · No speed claims','"60 seconds" removed everywhere'],
+    ['D11','dec','D11 · Calm trust strip','Reassure, explain, don’t shout'],
+    ['D12','dec','D12 · Trusted-community launch','Reddit UK money subs · MSE forum · no ads'],
+    ['SPEC','art','SPEC v1','docs/superpowers/specs/2026-06-12-…-design.md'],
+    ['BUILD','art','BUILD v1.0 — LIVE','engine + 11 tests · semilattice-research.github.io/debt-freedom-planner'],
+    ['S4','sim','S4 · Usability journey test','conversion_flow on live URL · 5 sessions · sim e974d13d'],
+    ['D13','dec','D13 · Standard strategy names','"Highest interest first (avalanche)" etc.'],
+    ['D14','dec','D14 · Prominent example button','Above the form'],
+    ['D15','dec','D15 · APR guidance','"on your statement or banking app"'],
+    ['BUILD2','art','BUILD v1.1 — shipped','Usability fixes, same day'],
+    ['LAUNCH','art','LAUNCH plan','LAUNCH.md · trusted communities · 100-user target'],
+  ];
+
+  // source, target, label
+  const E = [
+    ['C0','S1',''],
+    ['S1','D1','39.7%: "data, not advice"'],
+    ['S1','D2','93.8% prefer no bank link'],
+    ['S1','D3','85.5% abandon over data sharing'],
+    ['S1','D4','feature-pull: 29.9 / 22.3 / 19.9%'],
+    ['D1','S2',''], ['D4','S2',''],
+    ['S2','D5','45.8% try-first · 67.6% definite recommend'],
+    ['S2','D6','84.3% would send link · 95.6% trust personal recs'],
+    ['S2','D7','clarity 63% · plan 29% · score 7%'],
+    ['S2','D8','56% want <2 min · 31% go deep'],
+    ['D7','S3',''],
+    ['S3','D9','46.7% forced-choice win'],
+    ['S3','D10','62.7% disbelieve "60s" · speed = 0.1% importance'],
+    ['S3','D11','reassures 79% · 20.5% suspicious'],
+    ['S3','D12','52.4% decide on source trust · MSE first stop 50.4%'],
+    ['D2','SPEC',''], ['D3','SPEC',''], ['D5','SPEC',''], ['D6','SPEC',''],
+    ['D8','SPEC',''], ['D9','SPEC',''], ['D10','SPEC',''], ['D11','SPEC',''],
+    ['SPEC','BUILD',''],
+    ['BUILD','S4',''],
+    ['S4','D13','1/5: non-standard label'],
+    ['S4','D14','example button hard to find'],
+    ['S4','D15','finding APRs = friction'],
+    ['D13','BUILD2',''], ['D14','BUILD2',''], ['D15','BUILD2',''],
+    ['D12','LAUNCH',''], ['BUILD2','LAUNCH','100% completion · all 5 would share'],
+  ];
+
+  // dagre auto-layout, top to bottom
+  const g = new dagre.graphlib.Graph();
+  g.setGraph({ rankdir: 'TB', ranksep: 64, nodesep: 26, edgesep: 14 });
+  g.setDefaultEdgeLabel(() => ({}));
+  N.forEach(([id]) => g.setNode(id, { width: 230, height: 64 }));
+  E.forEach(([s, t]) => g.setEdge(s, t));
+  dagre.layout(g);
+
+  const nodes = N.map(([id, kind, title, sub]) => ({
+    id,
+    position: { x: g.node(id).x - 115, y: g.node(id).y - 32 },
+    sourcePosition: Position.Bottom,
+    targetPosition: Position.Top,
+    data: { label: e('div', { className: 'gnode n-' + kind },
+      e('b', null, title), e('small', null, sub)) },
+    style: { background: 'transparent', border: 'none', padding: 0, width: 218 },
+  }));
+
+  const edges = E.map(([s, t, label], i) => ({
+    id: 'e' + i,
+    source: s, target: t, label: label || undefined,
+    type: 'smoothstep',
+    animated: s.startsWith('S'),
+    markerEnd: { type: MarkerType.ArrowClosed, color: '#4c5a52' },
+    style: { stroke: s.startsWith('S') ? '#b4541c' : '#4c5a52', strokeWidth: s.startsWith('S') ? 1.6 : 1.2 },
+  }));
+
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(
+    e(Flow, { defaultNodes: nodes, defaultEdges: edges, fitView: true, minZoom: 0.2, proOptions: { hideAttribution: false } },
+      e(Background, { color: '#ddd2bd', gap: 22 }),
+      e(Controls, null),
+      e(MiniMap, { nodeColor: () => '#0d5c44', maskColor: 'rgba(247,242,233,0.7)' })
+    )
+  );
+})();
+</script>
+</body>
+</html>

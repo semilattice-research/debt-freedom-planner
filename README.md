@@ -18,7 +18,7 @@ A free debt payoff calculator for UK consumers. List your debts (credit cards, o
 Every product decision was driven by simulated-audience research on [Semilattice](https://semilattice.ai) (UK Adults 2026 – Consumer Finance audience, 804 simulated respondents, 90% benchmarked accuracy): discovery of the highest-pain money problems, a three-concept head-to-head, landing headline testing, and a usability test of simulated users on this live URL. The paper trail:
 
 - [`PRODUCT_LOG.md`](PRODUCT_LOG.md) — plain-English log of every step, the data, and the decisions it drove
-- [`DECISION_GRAPH.md`](DECISION_GRAPH.md) — the full inheritance graph: simulation → data point → decision → next simulation/spec/build
+- [`DECISION_GRAPH.md`](DECISION_GRAPH.md) — the full inheritance graph: simulation → data point → decision → next simulation/spec/build ([interactive version](https://semilattice-research.github.io/debt-freedom-planner/docs/decision-graph.html))
 - [`docs/superpowers/specs/`](docs/superpowers/specs/) — the design spec
 - [`LAUNCH.md`](LAUNCH.md) — distribution plan
 

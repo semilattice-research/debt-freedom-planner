@@ -1,5 +1,7 @@
 # Decision Inheritance Graph
 
+**Interactive version: https://semilattice-research.github.io/debt-freedom-planner/docs/decision-graph.html** (React Flow — pan, zoom, minimap)
+
 How the product evolved through Semilattice simulations. Every simulation node lists the
 decisions it produced; every decision lists where it flowed (next simulation, spec, build).
 Sim IDs are real Semilattice simulation IDs (first 8 chars).
