@@ -71,6 +71,22 @@
   .foot-link a { color: var(--copper); font-weight: 700; }
   .dark .foot-link a { color: #ffce8a; }
 
+  /* growing mini decision graph */
+  #minigraph {
+    position: fixed; bottom: 2.7rem; left: 50%; transform: translateX(-50%);
+    width: min(92vw, 880px); z-index: 10;
+    background: rgba(255, 253, 248, 0.93); border: 1px solid var(--line); border-radius: 999px;
+    padding: 0.35rem 1.1rem 0.15rem; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.14);
+  }
+  #minigraph svg { display: block; width: 100%; height: auto; }
+  #minigraph .nd, #minigraph .lb { opacity: 0.13; transition: opacity 0.45s ease; }
+  #minigraph .ed { stroke: #8d9890; stroke-width: 1; fill: none; opacity: 0.1; transition: opacity 0.45s ease; }
+  #minigraph .nd.seen, #minigraph .lb.seen { opacity: 1; }
+  #minigraph .ed.seen { opacity: 0.75; }
+  #minigraph .nd.now { animation: nodepulse 1.3s ease-in-out infinite; }
+  @keyframes nodepulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+  @media (max-width: 640px), (max-height: 560px) { #minigraph { display: none; } }
+
   /* nav */
   #nav { position: fixed; bottom: 1.2rem; left: 0; right: 0; display: flex; justify-content: center; gap: 0.45rem; z-index: 10; }
   #nav button { width: 0.6rem; height: 0.6rem; border-radius: 50%; border: none; cursor: pointer; background: rgba(120,120,110,0.45); padding: 0; }
@@ -141,7 +157,7 @@
   <h1>Three concepts entered. <em>One dominated both metrics.</em></h1>
   <div class="chart">
     <div class="chart-title">"Which would you try first?" — and who would <i>definitely</i> recommend it after use</div>
-    <div class="bar-row"><span class="lbl">Debt Freedom Planner</span><span class="bar-track"><span class="bar win" style="width:92%; --w:92%"></span><span class="bar-val" style="--w:92%">45.8% try-first · 67.6% definite recommend</span></span></div>
+    <div class="bar-row"><span class="lbl">Debt Freedom Planner</span><span class="bar-track"><span class="bar win" style="width:92%; --w:92%"></span><span class="bar-val" style="--w:92%">45.8% · 67.6%</span></span></div>
     <div class="bar-row"><span class="lbl">Money MOT (score /100)</span><span class="bar-track"><span class="bar" style="width:66%; --w:66%"></span><span class="bar-val" style="--w:66%">32.9% · 17.6%</span></span></div>
     <div class="bar-row"><span class="lbl">Money Snapshot (budget)</span><span class="bar-track"><span class="bar" style="width:43%; --w:43%"></span><span class="bar-val" style="--w:43%">21.3% · 27.8%</span></span></div>
   </div>
@@ -214,6 +230,7 @@
   <p class="foot-link"><a href="https://github.com/semilattice-research/debt-freedom-planner">github.com/semilattice-research/debt-freedom-planner →</a></p>
 </section>
 
+<div id="minigraph" aria-hidden="true"></div>
 <div id="nav"></div>
 <div class="pageno" id="pageno"></div>
 <div id="hintkeys">
@@ -222,6 +239,60 @@
 </div>
 
 <script>
+  /* ---- growing mini decision graph ----
+     step = the slide (1-based) on which the node enters the story */
+  const MINI = [
+    { id: 'C0',  x: 28,  t: 'ctx', step: 2,  label: 'brief' },
+    { id: 'S1',  x: 108, t: 'sim', step: 3,  label: 'S1 discover' },
+    { id: 'G1',  x: 188, t: 'dec', step: 4,  n: 4, label: 'D1–4' },
+    { id: 'S2',  x: 268, t: 'sim', step: 5,  label: 'S2 concepts' },
+    { id: 'G2',  x: 348, t: 'dec', step: 5,  n: 4, label: 'D5–8' },
+    { id: 'S3',  x: 428, t: 'sim', step: 6,  label: 'S3 headline' },
+    { id: 'G3',  x: 508, t: 'dec', step: 6,  n: 4, label: 'D9–12' },
+    { id: 'SP',  x: 588, t: 'art', step: 7,  label: 'spec' },
+    { id: 'B1',  x: 662, t: 'art', step: 7,  label: 'v1.0 live' },
+    { id: 'S4',  x: 742, t: 'sim', step: 8,  label: 'S4 usability' },
+    { id: 'G4',  x: 822, t: 'dec', step: 8,  n: 3, label: 'D13–15' },
+    { id: 'B2',  x: 896, t: 'art', step: 9,  label: 'v1.1' },
+    { id: 'L',   x: 966, t: 'art', step: 10, label: 'launch' },
+  ];
+  const CY = 27;
+  const dotYs = (n) => n === 4 ? [9, 21, 33, 45] : [15, 27, 39];
+  (function buildMini() {
+    const fill = { sim: '#0d5c44', dec: '#b4541c', art: '#1c2b24' };
+    let edges = '', nodes = '', labels = '';
+    MINI.forEach((m, i) => {
+      const prev = MINI[i - 1];
+      if (prev) {
+        const st = Math.max(m.step, prev.step);
+        const pys = prev.t === 'dec' ? dotYs(prev.n) : [CY];
+        const mys = m.t === 'dec' ? dotYs(m.n) : [CY];
+        pys.forEach(py => mys.forEach(my => {
+          edges += `<path class="ed" data-step="${st}" d="M ${prev.x + 8} ${py} C ${(prev.x + m.x) / 2} ${py}, ${(prev.x + m.x) / 2} ${my}, ${m.x - 8} ${my}"/>`;
+        }));
+      }
+      if (m.t === 'dec') {
+        dotYs(m.n).forEach(y => { nodes += `<circle class="nd" data-step="${m.step}" cx="${m.x}" cy="${y}" r="3.6" fill="${fill.dec}"/>`; });
+      } else if (m.t === 'sim') {
+        nodes += `<circle class="nd" data-step="${m.step}" cx="${m.x}" cy="${CY}" r="7.5" fill="${fill.sim}"/>`;
+      } else if (m.t === 'art') {
+        nodes += `<rect class="nd" data-step="${m.step}" x="${m.x - 6.5}" y="${CY - 6.5}" width="13" height="13" rx="3" fill="${fill.art}"/>`;
+      } else {
+        nodes += `<circle class="nd" data-step="${m.step}" cx="${m.x}" cy="${CY}" r="6.5" fill="none" stroke="#4c5a52" stroke-width="1.3" stroke-dasharray="3 2.4"/>`;
+      }
+      labels += `<text class="lb" data-step="${m.step}" x="${m.x}" y="62" text-anchor="middle" font-size="8.5" font-weight="600" fill="#4c5a52">${m.label}</text>`;
+    });
+    document.getElementById('minigraph').innerHTML =
+      `<svg viewBox="0 0 994 68" role="presentation">${edges}${nodes}${labels}</svg>`;
+  })();
+  function updateMini(slide) {
+    document.querySelectorAll('#minigraph [data-step]').forEach(el => {
+      const st = +el.dataset.step;
+      el.classList.toggle('seen', st <= slide);
+      el.classList.toggle('now', st === slide && el.classList.contains('nd'));
+    });
+  }
+
   const slides = [...document.querySelectorAll('.slide')];
   const nav = document.getElementById('nav');
   let cur = 0;
@@ -238,6 +309,7 @@
     document.getElementById('pageno').textContent = (cur + 1) + ' / ' + slides.length;
     document.getElementById('prev').disabled = cur === 0;
     document.getElementById('next').disabled = cur === slides.length - 1;
+    updateMini(cur + 1);
   }
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') go(cur + 1);
