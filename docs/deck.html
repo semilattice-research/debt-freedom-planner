@@ -75,7 +75,14 @@
   #nav { position: fixed; bottom: 1.2rem; left: 0; right: 0; display: flex; justify-content: center; gap: 0.45rem; z-index: 10; }
   #nav button { width: 0.6rem; height: 0.6rem; border-radius: 50%; border: none; cursor: pointer; background: rgba(120,120,110,0.45); padding: 0; }
   #nav button.on { background: var(--copper); }
-  #hintkeys { position: fixed; bottom: 1rem; right: 1.4rem; font-size: 0.72rem; color: rgba(120,120,110,0.8); z-index: 10; }
+  #hintkeys { position: fixed; bottom: 0.9rem; right: 1.4rem; z-index: 10; display: flex; gap: 0.4rem; }
+  #hintkeys button {
+    font: inherit; font-size: 1rem; font-weight: 700; cursor: pointer;
+    color: var(--copper); background: var(--card); border: 1.5px solid var(--copper);
+    border-radius: 8px; padding: 0.35rem 0.85rem;
+  }
+  #hintkeys button:hover { background: var(--copper-soft); }
+  #hintkeys button:disabled { opacity: 0.35; cursor: default; }
   .pageno { position: fixed; bottom: 1rem; left: 1.4rem; font-size: 0.72rem; color: rgba(120,120,110,0.8); z-index: 10; }
 </style>
 </head>
@@ -209,7 +216,10 @@
 
 <div id="nav"></div>
 <div class="pageno" id="pageno"></div>
-<div id="hintkeys">← → or click to advance</div>
+<div id="hintkeys">
+  <button id="prev" aria-label="Previous slide">←</button>
+  <button id="next" aria-label="Next slide">→</button>
+</div>
 
 <script>
   const slides = [...document.querySelectorAll('.slide')];
@@ -226,13 +236,16 @@
     slides.forEach((s, j) => s.classList.toggle('active', j === cur));
     [...nav.children].forEach((b, j) => b.classList.toggle('on', j === cur));
     document.getElementById('pageno').textContent = (cur + 1) + ' / ' + slides.length;
+    document.getElementById('prev').disabled = cur === 0;
+    document.getElementById('next').disabled = cur === slides.length - 1;
   }
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') go(cur + 1);
     if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(cur - 1);
     if (e.key === 'Home') go(0);
   });
-  document.addEventListener('click', (e) => { if (!e.target.closest('a, button')) go(cur + 1); });
+  document.getElementById('prev').addEventListener('click', () => go(cur - 1));
+  document.getElementById('next').addEventListener('click', () => go(cur + 1));
   let touchX = null;
   document.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
   document.addEventListener('touchend', (e) => {
