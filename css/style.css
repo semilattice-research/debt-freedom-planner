@@ -92,6 +92,12 @@ body {
   border: 1.5px solid var(--green); padding: 0.65rem 1.3rem;
 }
 .btn-ghost:hover { background: rgba(13, 92, 68, 0.07); }
+.btn-example {
+  background: var(--copper-soft); color: #7c3a12;
+  border: 1.5px dashed var(--copper); padding: 0.65rem 1.3rem;
+}
+.btn-example:hover { background: #fbdfc8; }
+.strategy-opt strong small { font-weight: 500; font-size: 0.8em; opacity: 0.75; }
 
 /* ---------- planner panel ---------- */
 .panel {

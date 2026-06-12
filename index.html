@@ -48,13 +48,14 @@
   <section class="panel" id="planner">
     <div class="wrap">
       <h2><span class="step">1</span> Your debts</h2>
-      <p class="hint">Credit cards, overdrafts, loans, car finance, BNPL, store cards — everything except your mortgage. Find the APR and minimum payment on your latest statement; a close guess is fine to start.</p>
+      <p class="hint">Credit cards, overdrafts, loans, car finance, BNPL, store cards — everything except your mortgage. You&rsquo;ll find each APR and minimum payment on your latest statement or in your banking app — a close guess is fine to start.</p>
+
+      <p class="row-actions"><button type="button" class="btn btn-example" id="load-example">Not sure where to start? See it with example numbers →</button></p>
 
       <div id="debt-rows" class="debt-rows"></div>
 
       <div class="row-actions">
         <button type="button" class="btn btn-ghost" id="add-debt">+ Add another debt</button>
-        <button type="button" class="btn btn-ghost" id="load-example">Show me an example</button>
       </div>
 
       <h2><span class="step">2</span> What you can pay monthly</h2>
@@ -83,13 +84,13 @@
 
       <div class="strategy" role="radiogroup" aria-label="Payoff strategy">
         <button type="button" class="strategy-opt" id="opt-avalanche" aria-pressed="true">
-          <strong>Cheapest first</strong>
-          <span>Highest interest rate paid off first — saves the most money</span>
+          <strong>Highest interest first <small>(the &ldquo;avalanche&rdquo; method)</small></strong>
+          <span>Clears your most expensive debt first — saves the most money</span>
           <em id="avalanche-stats"></em>
         </button>
         <button type="button" class="strategy-opt" id="opt-snowball" aria-pressed="false">
-          <strong>Smallest first</strong>
-          <span>Smallest balance paid off first — quick wins for motivation</span>
+          <strong>Smallest balance first <small>(the &ldquo;snowball&rdquo; method)</small></strong>
+          <span>Clears your smallest debt first — quick wins for motivation</span>
           <em id="snowball-stats"></em>
         </button>
       </div>

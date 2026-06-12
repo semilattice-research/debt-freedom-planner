@@ -166,7 +166,7 @@ function renderResults(debts, warnings) {
   $('#opt-avalanche').setAttribute('aria-pressed', strategy === 'avalanche');
   $('#opt-snowball').setAttribute('aria-pressed', strategy === 'snowball');
   $('#strategy-note').textContent = c.snowballExtraInterest > 0.5
-    ? `Cheapest-first saves ${gbp.format(c.snowballExtraInterest)} compared with smallest-first. Smallest-first clears your first debt sooner — pick whichever keeps you going.`
+    ? `Highest-interest-first (avalanche) saves ${gbp.format(c.snowballExtraInterest)} compared with smallest-balance-first (snowball). Snowball clears your first debt sooner — pick whichever keeps you going.`
     : `Both orders cost about the same here — pick whichever keeps you motivated.`;
 
   // Warnings
