@@ -44,8 +44,8 @@ graph TD
 
     SPEC["SPEC v1<br/>docs/superpowers/specs/<br/>2026-06-12-debt-freedom-planner-design.md"]
 
-    SPEC --> BUILD["BUILD: engine.js + tests (11 pass),<br/>UI, GitHub Pages deploy"]
-    BUILD --> S4["S4 · Usability journey test (planned)<br/>journey mode on deployed URL"]
+    SPEC --> BUILD["BUILD: engine.js + 11 passing tests,<br/>UI, live at<br/>jtewright.github.io/debt-freedom-planner"]
+    BUILD --> S4["S4 · Usability journey test<br/>conversion_flow on live URL<br/>sim e974d13d · 2026-06-12"]
     S4 -.->|comprehension fixes| BUILD
 ```
 

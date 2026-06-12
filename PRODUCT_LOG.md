@@ -68,4 +68,16 @@
 
 ## 2026-06-12 — Build
 
-**What we did:** Wrote the payoff calculation engine test-first (11 unit tests, all passing): monthly interest at APR/12, minimum payments + surplus to target debt (avalanche = highest APR, snowball = smallest balance), rollover when a debt clears, minimums-only baseline comparison, never-clears warnings, 50-year cap. Then built the single-page site and deployed to GitHub Pages.
+**What we did:** Wrote the payoff calculation engine test-first (11 unit tests, all passing): monthly interest at APR/12, minimum payments + surplus to target debt (avalanche = highest APR, snowball = smallest balance), rollover when a debt clears, minimums-only baseline comparison, never-clears warnings, 50-year cap. Built the single-page site (vanilla HTML/CSS/JS, no build step, localStorage only), verified it end-to-end in a real browser (fixed one bug: the "Focus" tag marked the largest payment instead of the debt receiving extra money), and shipped it.
+
+**Live at: https://jtewright.github.io/debt-freedom-planner/** (GitHub Pages, repo `jtewright/debt-freedom-planner`).
+
+Implements every validated decision: "Stop guessing" hero verbatim, no speed claims, calm trust strip + "Why is this free?", instant debt-free date headline with depth below, share buttons (Web Share/WhatsApp/copy) with "sharing sends only the link — never your numbers", not-advice disclaimer with StepChange/National Debtline/MoneyHelper links.
+
+---
+
+## 2026-06-12 — Usability test on the live site
+
+**What we did:** Ran a Semilattice **User Journey** study — simulated UK Consumer Finance users attempting the full flow on the live URL (land → enter debts → budget → get plan), watching for stalls around APR/minimum-payment inputs, budget comprehension, strategy-toggle understanding, and trust reactions.
+
+**Result:** _pending — simulation e974d13d running_
