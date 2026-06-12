@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Inheritance Report — how a product was inferred into existence</title>
+<meta name="description" content="The full inference chain behind Debt Freedom Planner: every piece of Semilattice evidence, the inference it licensed, and the decision it produced — converging on the shipped product.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,560;0,9..144,640;1,9..144,400;1,9..144,560&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f7f2e9; --card: #fffdf8; --ink: #1c2b24; --ink-soft: #4c5a52;
+    --green: #0d5c44; --green-deep: #0a4634; --copper: #b4541c; --copper-soft: #fdeadd;
+    --gold: #f8e8c8; --line: #ddd2bd;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "Public Sans", sans-serif; font-size: 1rem; line-height: 1.55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.025 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 1.4rem; }
+
+  /* ---------- header ---------- */
+  header { padding: 4.5rem 0 3rem; text-align: center; }
+  .doc-eyebrow { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--copper); margin: 0 0 1.4rem; }
+  header h1 { font-family: "Fraunces", serif; font-weight: 640; font-size: clamp(2.2rem, 6vw, 3.6rem); line-height: 1.07; letter-spacing: -0.015em; margin: 0 auto 1.2rem; max-width: 18ch; }
+  header h1 em { font-style: italic; color: var(--copper); }
+  header p { color: var(--ink-soft); max-width: 54ch; margin: 0 auto; }
+  .rule { width: 64px; height: 3px; background: var(--copper); margin: 2.2rem auto 0; border-radius: 2px; }
+
+  /* ---------- spine ---------- */
+  .spine { position: relative; padding: 2rem 0 0; }
+  .spine::before {
+    content: ""; position: absolute; top: 0; bottom: 0; left: 50%;
+    width: 2px; background: var(--line); transform: translateX(-50%);
+  }
+  @media (max-width: 700px) { .spine::before { left: 14px; } }
+
+  .stage { position: relative; padding: 2.6rem 0; }
+  .stage-marker {
+    position: relative; z-index: 1; width: fit-content; margin: 0 auto 1.8rem;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    background: var(--green); color: var(--gold); border-radius: 999px; padding: 0.5rem 1.3rem;
+    box-shadow: 0 3px 12px rgba(10,70,52,0.3);
+  }
+  .stage-marker.ctx { background: transparent; color: var(--ink-soft); border: 1.5px dashed var(--ink-soft); box-shadow: none; }
+  .stage-marker.art { background: var(--ink); color: var(--gold); }
+  @media (max-width: 700px) { .stage-marker { margin-left: 0; } }
+
+  .card {
+    position: relative; z-index: 1; background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 1.8rem 2rem; box-shadow: 0 4px 22px rgba(0,0,0,0.06);
+  }
+  @media (max-width: 700px) { .card { margin-left: 30px; padding: 1.4rem 1.3rem; } }
+
+  .study-meta { font-size: 0.78rem; color: var(--ink-soft); margin: 0 0 1.3rem; }
+  .study-meta b { color: var(--green); }
+
+  /* evidence rows */
+  .ev { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1.1rem; align-items: baseline; padding: 0.55rem 0; border-bottom: 1px dotted var(--line); }
+  .ev:last-of-type { border-bottom: none; }
+  .ev .stat { font-family: "Fraunces", serif; font-style: italic; font-weight: 560; font-size: 1.7rem; color: var(--copper); text-align: right; line-height: 1; }
+  .ev .what { font-size: 0.95rem; color: var(--ink-soft); }
+  .ev .what b { color: var(--ink); }
+  @media (max-width: 700px) { .ev { grid-template-columns: 5.2rem 1fr; gap: 0.8rem; } .ev .stat { font-size: 1.35rem; } }
+
+  /* inference */
+  .therefore { display: flex; gap: 1rem; align-items: flex-start; margin: 1.6rem 0 1.4rem; padding: 1.1rem 1.3rem; background: var(--copper-soft); border-radius: 10px; }
+  .therefore .sym { font-family: "Fraunces", serif; font-size: 1.9rem; line-height: 1; color: var(--copper); font-weight: 640; }
+  .therefore p { margin: 0; font-family: "Fraunces", serif; font-weight: 560; font-size: 1.18rem; line-height: 1.35; color: #7c3a12; }
+
+  /* decisions */
+  .decisions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .dchip {
+    font-size: 0.82rem; font-weight: 600; border: 1.5px solid var(--copper); color: var(--ink);
+    background: var(--card); border-radius: 999px; padding: 0.35rem 0.9rem;
+  }
+  .dchip b { color: var(--copper); }
+
+  /* inherited accumulator */
+  .carried { position: relative; z-index: 1; width: fit-content; max-width: 88%; margin: 1.6rem auto 0; text-align: center;
+    font-size: 0.72rem; color: var(--ink-soft); background: var(--paper); padding: 0.4rem 1rem; border: 1px solid var(--line); border-radius: 999px; }
+  .carried b { color: var(--copper); letter-spacing: 0.04em; }
+  @media (max-width: 700px) { .carried { margin-left: 30px; } }
+
+  /* convergence + product */
+  .funnel { position: relative; z-index: 1; width: 0; height: 0; margin: 1rem auto 0;
+    border-left: 26px solid transparent; border-right: 26px solid transparent; border-top: 30px solid var(--line); }
+  @media (max-width: 700px) { .funnel { display: none; } }
+
+  .product { padding: 1rem 0 5rem; }
+  .product .card { background: var(--green-deep); color: var(--gold); border: none; padding: 0; overflow: hidden;
+    box-shadow: 0 18px 60px rgba(10,70,52,0.35); }
+  .product .inner { padding: 2.4rem 2.4rem 2rem; }
+  .product h2 { font-family: "Fraunces", serif; font-weight: 640; font-size: clamp(1.7rem, 4vw, 2.5rem); line-height: 1.1; margin: 0 0 0.8rem; }
+  .product h2 em { font-style: italic; color: #ffce8a; }
+  .product p { color: #d8d2bd; margin: 0 0 1.4rem; }
+  .product a.cta { display: inline-block; font-weight: 700; color: var(--ink); background: #ffce8a; text-decoration: none; border-radius: 9px; padding: 0.75rem 1.5rem; }
+  .product img { display: block; width: 100%; border-top: 1px solid rgba(248,232,200,0.25); }
+  .tally { display: flex; flex-wrap: wrap; gap: 2rem; margin: 1.8rem 0 0.4rem; }
+  .tally div span { display: block; }
+  .tally .n { font-family: "Fraunces", serif; font-style: italic; font-weight: 560; font-size: 1.9rem; color: #ffce8a; line-height: 1.1; }
+  .tally .d { font-size: 0.78rem; color: #c9b98c; }
+
+  footer { text-align: center; padding: 0 0 4rem; font-size: 0.82rem; color: var(--ink-soft); }
+  footer a { color: var(--copper); font-weight: 600; }
+
+  /* reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2,0.8,0.3,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+  @media print { .reveal { opacity: 1 !important; transform: none !important; } .spine::before { display: none; } }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <p class="doc-eyebrow">Claude Fable × Semilattice · 12 June 2026</p>
+  <h1>The product is the <em>conclusion.</em></h1>
+  <p>An inheritance report. Four simulated studies — one audience of 804 UK adults — each producing evidence, each evidence licensing an inference, each inference becoming a decision the next stage inherited. Read top to bottom: this is the argument whose conclusion is a shipped product.</p>
+  <div class="rule"></div>
+</header>
+
+<div class="wrap spine">
+
+  <!-- STAGE 0 -->
+  <section class="stage reveal">
+    <div class="stage-marker ctx">Premises · fixed before any data</div>
+    <div class="card">
+      <div class="decisions">
+        <span class="dchip">Free web app</span>
+        <span class="dchip">No Open Banking</span>
+        <span class="dchip">No signup</span>
+        <span class="dchip">Useful in the first session</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 1 -->
+  <section class="stage reveal">
+    <div class="stage-marker">Study 1 · Discovery</div>
+    <div class="card">
+      <p class="study-meta">User Research · <b>understand_users</b> · UK Adults 2026 – Consumer Finance · n=804 · sim 4d51bac5</p>
+      <div class="ev"><span class="stat">46.6%</span><span class="what"><b>Budgeting is the top frustration</b> — five times the next problem (debt payoff, 10.0%).</span></div>
+      <div class="ev"><span class="stat">39.7%</span><span class="what">Biggest complaint about existing apps: <b>"no useful advice — just data."</b></span></div>
+      <div class="ev"><span class="stat">93.8%</span><span class="what">Prefer or insist that a tool <b>does not connect to their bank.</b></span></div>
+      <div class="ev"><span class="stat">85.5%</span><span class="what">Would abandon a tool that <b>shares data with third parties</b> — the single strongest signal in the study.</span></div>
+      <div class="ev"><span class="stat">22.8%</span><span class="what">Trust a tool that <b>explains how it makes money</b> (the top driver, FCA approval at 39.3%, is unclaimable for us).</span></div>
+      <div class="therefore"><span class="sym">∴</span><p>The opportunity is not a better dashboard. It is a tool that takes your numbers, tells you exactly what to do — and visibly refuses to take your data.</p></div>
+      <div class="decisions">
+        <span class="dchip"><b>D1</b> Give actions, not charts</span>
+        <span class="dchip"><b>D2</b> Manual input only</span>
+        <span class="dchip"><b>D3</b> Local-only data · "why free?" · no FCA claims</span>
+        <span class="dchip"><b>D4</b> Test 3 concepts: Snapshot / Debt Planner / MOT</span>
+      </div>
+    </div>
+    <div class="carried">inherited by the next stage: <b>D1 · D4</b> shape the concepts · <b>D2 · D3</b> reserved for the spec</div>
+  </section>
+
+  <!-- STAGE 2 -->
+  <section class="stage reveal">
+    <div class="stage-marker">Study 2 · Concept head-to-head</div>
+    <div class="card">
+      <p class="study-meta">User Research · <b>prioritise_features</b> · same audience · n=804 · sim fad3e069 — all three concepts phrased to honour D1–D3</p>
+      <div class="ev"><span class="stat">45.8%</span><span class="what"><b>Debt Freedom Planner wins first choice</b> (Money MOT 32.9%, Money Snapshot 21.3%) — despite only 11.1% actively paying off debt.</span></div>
+      <div class="ev"><span class="stat">67.6%</span><span class="what">Would <b>definitely recommend it after use</b> — nearly 4× the MOT's score mechanic (17.6%).</span></div>
+      <div class="ev"><span class="stat">84.3%</span><span class="what">Natural next step after finding a useful tool: <b>send the link to a friend or family member.</b></span></div>
+      <div class="ev"><span class="stat">63.0%</span><span class="what">Want <b>"clarity"</b> from a money tool; 29.4% want "a plan"; a "score" barely registers (6.9%).</span></div>
+      <div class="ev"><span class="stat">56.4%</span><span class="what">Want value <b>within two minutes</b> — yet 30.8% will go deeper if it's worth it.</span></div>
+      <div class="therefore"><span class="sym">∴</span><p>The concrete plan beats the clever score. Advocacy is the distribution model. Show the answer instantly; keep the depth one tap below.</p></div>
+      <div class="decisions">
+        <span class="dchip"><b>D5</b> Build the Debt Freedom Planner</span>
+        <span class="dchip"><b>D6</b> One-tap sharing on results</span>
+        <span class="dchip"><b>D7</b> Clarity + plan language</span>
+        <span class="dchip"><b>D8</b> Instant headline, depth below</span>
+      </div>
+    </div>
+    <div class="carried">inherited by the next stage: <b>D7</b> shapes every headline candidate · <b>D5 · D6 · D8</b> reserved for the spec</div>
+  </section>
+
+  <!-- STAGE 3 -->
+  <section class="stage reveal">
+    <div class="stage-marker">Study 3 · Headline test</div>
+    <div class="card">
+      <p class="study-meta">User Research · <b>test_messaging</b> · same audience · n=804 · sim 916fc331 — five headlines, all clarity/plan-framed per D7</p>
+      <div class="ev"><span class="stat">46.7%</span><span class="what"><b>"Stop guessing…" wins the forced choice</b> — more than double the runner-up — and tops "definitely would click" at 46.9%.</span></div>
+      <div class="ev"><span class="stat">62.7%</span><span class="what">Find the <b>"60 seconds" claim unbelievable</b>; speed is the least important factor of all (0.1%).</span></div>
+      <div class="ev"><span class="stat">20.5%</span><span class="what">Become <b>more suspicious</b> when privacy is shouted — even though it strongly reassures 47.1%.</span></div>
+      <div class="ev"><span class="stat">52.4%</span><span class="what">Decide whether to try a money tool on <b>whether they trust the source</b>; MoneySavingExpert is the first stop for 50.4%.</span></div>
+      <div class="therefore"><span class="sym">∴</span><p>Name the frustration. Drop the hype. Whisper the privacy. And launch where trust already lives — not in ads.</p></div>
+      <div class="decisions">
+        <span class="dchip"><b>D9</b> H1 = "Stop guessing…" verbatim</span>
+        <span class="dchip"><b>D10</b> No speed claims anywhere</span>
+        <span class="dchip"><b>D11</b> Calm, explained trust strip</span>
+        <span class="dchip"><b>D12</b> Launch via trusted communities</span>
+      </div>
+    </div>
+    <div class="carried">inherited: <b>D2 · D3 · D5 · D6 · D8 · D9 · D10 · D11</b> → written into the spec · <b>D12</b> → held for launch</div>
+  </section>
+
+  <!-- SPEC / BUILD -->
+  <section class="stage reveal">
+    <div class="stage-marker art">Spec → Build v1.0 · shipped the same afternoon</div>
+    <div class="card">
+      <p style="margin:0 0 1rem; color: var(--ink-soft);">Every adopted decision compiled into one page: the winning headline verbatim, manual debt entry, avalanche/snowball comparison, instant debt-free date with the full plan below, one-tap share, local-only data with an honest "Why is this free?", and free-debt-help signposting. Engine written test-first — 11 passing tests.</p>
+      <div class="decisions">
+        <span class="dchip">D1</span><span class="dchip">D2</span><span class="dchip">D3</span><span class="dchip">D5</span><span class="dchip">D6</span><span class="dchip">D7</span><span class="dchip">D8</span><span class="dchip">D9</span><span class="dchip">D10</span><span class="dchip">D11</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 4 -->
+  <section class="stage reveal">
+    <div class="stage-marker">Study 4 · Usability, on the live product</div>
+    <div class="card">
+      <p class="study-meta">User Journey · <b>conversion_flow</b> · same audience · 5 simulated sessions · sim e974d13d</p>
+      <div class="ev"><span class="stat">5 / 5</span><span class="what"><b>Completed the full flow</b> — debts in, plan out, strategies understood — in 97–114 seconds.</span></div>
+      <div class="ev"><span class="stat">4 / 5</span><span class="what">Singled out the <b>overdraft interest warning</b> as the trust moment: "it felt like the tool was actually looking out for me."</span></div>
+      <div class="ev"><span class="stat">5 / 5</span><span class="what">Said they <b>would share or recommend</b> the tool.</span></div>
+      <div class="ev"><span class="stat">3</span><span class="what">Minor frictions: a non-standard strategy label, an easy-to-miss example button, and the effort of finding real APRs.</span></div>
+      <div class="therefore"><span class="sym">∴</span><p>The argument holds in practice. Polish the vocabulary and the on-ramp — change nothing structural.</p></div>
+      <div class="decisions">
+        <span class="dchip"><b>D13</b> Standard names: avalanche / snowball</span>
+        <span class="dchip"><b>D14</b> Prominent example button</span>
+        <span class="dchip"><b>D15</b> APR guidance inline</span>
+      </div>
+    </div>
+    <div class="carried">D13 · D14 · D15 → <b>v1.1, shipped the same day</b></div>
+  </section>
+
+  <div class="funnel"></div>
+</div>
+
+<!-- PRODUCT -->
+<div class="wrap product reveal">
+  <div class="card">
+    <div class="inner">
+      <p class="doc-eyebrow" style="color:#c9b98c">The conclusion</p>
+      <h2>Debt Freedom Planner — <em>every pixel downstream of a number.</em></h2>
+      <p>Free UK debt payoff calculator. No signup, no bank connection, nothing leaves your device. Fifteen decisions; not one made on taste alone.</p>
+      <a class="cta" href="https://semilattice-research.github.io/debt-freedom-planner/">Open the live product →</a>
+      <div class="tally">
+        <div><span class="n">4</span><span class="d">studies</span></div>
+        <div><span class="n">804</span><span class="d">simulated UK adults</span></div>
+        <div><span class="n">15</span><span class="d">evidence-backed decisions</span></div>
+        <div><span class="n">2</span><span class="d">builds shipped in a day</span></div>
+        <div><span class="n">0</span><span class="d">decisions without a number</span></div>
+      </div>
+    </div>
+    <img src="dfp-fullpage.jpeg" alt="Debt Freedom Planner — full page">
+  </div>
+</div>
+
+<footer class="wrap">
+  <p>Companion artifacts: <a href="deck.html">the story deck</a> · <a href="decision-graph.html">the interactive decision graph</a> · <a href="https://github.com/semilattice-research/debt-freedom-planner">the repository &amp; full logs</a></p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
