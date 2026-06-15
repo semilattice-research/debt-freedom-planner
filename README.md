@@ -18,7 +18,16 @@ A free debt payoff calculator for UK consumers. List your debts (credit cards, o
 
 ## How it was built
 
-Every product decision was driven by simulated-audience research on [Semilattice](https://semilattice.ai) (UK Adults 2026 – Consumer Finance audience, 804 simulated respondents, 90% benchmarked accuracy): discovery of the highest-pain money problems, a three-concept head-to-head, landing headline testing, and a usability test of simulated users on this live URL. The paper trail:
+Every product decision was driven by simulated-audience research on [Semilattice](https://semilattice.ai) (UK Adults 2026 – Consumer Finance audience, 804 simulated respondents, 90% benchmarked accuracy): discovery of the highest-pain money problems, a three-concept head-to-head, landing headline testing, and a usability test of simulated users on this live URL.
+
+**The four studies — full results, open to view:**
+
+1. [Discovery: where the pain is](http://app.semilattice.ai/share/simulation/4d51bac5-793d-4f12-ad37-9204facee839) — budgeting frustrates 46.6%; "advice not data" is the #1 complaint; 93.8% want no bank connection.
+2. [Concept head-to-head](http://app.semilattice.ai/share/simulation/fad3e069-8821-433e-a4a8-5ae99ea1423e) — Debt Freedom Planner wins first choice (45.8%) and advocacy (67.6% would definitely recommend).
+3. [Landing headline test](http://app.semilattice.ai/share/simulation/916fc331-c222-4e14-8946-4e6dda7c9f85) — "Stop guessing…" wins 46.7%; the "60 seconds" speed claim backfires.
+4. [Usability test on the live site](http://app.semilattice.ai/share/simulation/e974d13d-3f0e-4699-b4fe-6afda10b6764) — 5/5 simulated users complete the flow in under two minutes; all would share it.
+
+The paper trail:
 
 - [`PRODUCT_LOG.md`](PRODUCT_LOG.md) — plain-English log of every step, the data, and the decisions it drove
 - [`DECISION_GRAPH.md`](DECISION_GRAPH.md) — the full inheritance graph: simulation → data point → decision → next simulation/spec/build ([interactive version](https://semilattice-research.github.io/debt-freedom-planner/docs/decision-graph.html))

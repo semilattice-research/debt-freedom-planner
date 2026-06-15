@@ -1,7 +1,7 @@
 # Debt Freedom Planner — Design
 
 **Date:** 2026-06-12
-**Status:** Approved (decisions delegated; validated via Semilattice studies 4d51bac5, fad3e069)
+**Status:** Approved (decisions delegated; validated via Semilattice studies [4d51bac5](http://app.semilattice.ai/share/simulation/4d51bac5-793d-4f12-ad37-9204facee839), [fad3e069](http://app.semilattice.ai/share/simulation/fad3e069-8821-433e-a4a8-5ae99ea1423e))
 
 ## What it is
 
@@ -64,4 +64,4 @@ Deploy: GitHub repo (org `semilattice-research`) + GitHub Pages.
 
 - Engine: unit tests for interest math, payoff ordering, rollover ("snowball effect"), baseline comparison, never-clears detection, zero-APR debts.
 - UX: Semilattice User Journey usability test against the deployed URL; iterate on comprehension issues.
-- Messaging: Semilattice headline test (sim 916fc331) decides the landing H1.
+- Messaging: Semilattice headline test ([sim 916fc331](http://app.semilattice.ai/share/simulation/916fc331-c222-4e14-8946-4e6dda7c9f85)) decides the landing H1.

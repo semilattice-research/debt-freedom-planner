@@ -4,7 +4,12 @@
 
 How the product evolved through Semilattice simulations. Every simulation node lists the
 decisions it produced; every decision lists where it flowed (next simulation, spec, build).
-Sim IDs are real Semilattice simulation IDs (first 8 chars).
+Sim IDs are real Semilattice simulation IDs (first 8 chars) — view the full results:
+
+- **S1 · Discovery** (`4d51bac5`) — http://app.semilattice.ai/share/simulation/4d51bac5-793d-4f12-ad37-9204facee839
+- **S2 · Concept head-to-head** (`fad3e069`) — http://app.semilattice.ai/share/simulation/fad3e069-8821-433e-a4a8-5ae99ea1423e
+- **S3 · Headline test** (`916fc331`) — http://app.semilattice.ai/share/simulation/916fc331-c222-4e14-8946-4e6dda7c9f85
+- **S4 · Usability journey** (`e974d13d`) — http://app.semilattice.ai/share/simulation/e974d13d-3f0e-4699-b4fe-6afda10b6764
 
 ```mermaid
 graph TD

@@ -9,6 +9,8 @@
 
 **What we did:** Ran a Semilattice **User Research** study ("Understand your audience") against the **UK Adults 2026 – Consumer Finance** audience (804 simulated UK adults, 90% benchmarked accuracy).
 
+📊 **Full results:** http://app.semilattice.ai/share/simulation/4d51bac5-793d-4f12-ad37-9204facee839
+
 **What we asked:** What frustrates UK adults most about managing money, how they currently cope, what they'd want from a free tool that doesn't connect to their bank, and what builds trust.
 
 **Why:** We haven't picked a concept yet. Constraints we fixed up-front: free web app, no bank connection (no Open Banking licensing), useful in the first session without signup.
@@ -32,6 +34,8 @@
 
 **What we did:** Ran a Semilattice **feature prioritisation** study on the same UK Consumer Finance audience, testing 3 concepts derived from discovery: **Money Snapshot** (2-min spending breakdown vs UK households + 3 actions), **Debt Freedom Planner** (fastest/cheapest payoff plan + debt-free date), **Money MOT** (5-min health check, score /100, action plan).
 
+📊 **Full results:** http://app.semilattice.ai/share/simulation/fad3e069-8821-433e-a4a8-5ae99ea1423e
+
 **Result (804 respondents):**
 - **Debt Freedom Planner won decisively: 45.8% would try it first** (Money MOT 32.9%, Money Snapshot 21.3%) — even though only 11.1% are actively paying off debts. Concrete outputs (debt-free date, exact payments) appeal broadly.
 - **Strongest advocacy by far**: 67.6% would *definitely* recommend the Debt Planner after using it, vs 27.8% (Snapshot) and 17.6% (MOT's score mechanic).
@@ -51,6 +55,8 @@
 ## 2026-06-12 — Landing headline test
 
 **What we did:** Ran a Semilattice **message testing** study (same UK Consumer Finance audience, 804 respondents) comparing 5 landing headlines for the Debt Freedom Planner.
+
+📊 **Full results:** http://app.semilattice.ai/share/simulation/916fc331-c222-4e14-8946-4e6dda7c9f85
 
 **Result:**
 - **Winner: "Stop guessing. See exactly when you'll be debt-free and how to get there faster — free."** — 46.7% in forced choice (more than double the runner-up) and the highest "definitely would click" (46.9%). It works because it names a frustration people already feel.
@@ -79,6 +85,8 @@ Implements every validated decision: "Stop guessing" hero verbatim, no speed cla
 ## 2026-06-12 — Usability test on the live site
 
 **What we did:** Ran a Semilattice **User Journey** study — simulated UK Consumer Finance users attempting the full flow on the live URL (land → enter debts → budget → get plan), watching for stalls around APR/minimum-payment inputs, budget comprehension, strategy-toggle understanding, and trust reactions.
+
+📊 **Full results:** http://app.semilattice.ai/share/simulation/e974d13d-3f0e-4699-b4fe-6afda10b6764
 
 **Result (5 simulated sessions on the live site):**
 - **100% task completion**, all in 97–114 seconds — everyone got their debt-free date, savings, monthly payments, and understood both strategies.
